@@ -35,3 +35,9 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# macOS
+.DS_Store
+infra/environments/properties/.terraform.lock.hcl
+infra/environments/properties/terraform.tfvars.example
+infra/environments/properties/terraform.tfvars.example

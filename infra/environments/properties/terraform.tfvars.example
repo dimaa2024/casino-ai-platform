@@ -1,0 +1,53 @@
+organization_context = {
+  bootstrap_project = "casino-ai-platform"
+  default_region    = "us-central1"
+  labels = {
+    system = "casino-ai-platform"
+    owner  = "platform"
+  }
+}
+
+properties = {
+  property_las_vegas = {
+    property_id              = "las-vegas"
+    project_id               = "casino-ai-platform"
+    region                   = "us-central1"
+    vpc_cidr                 = "10.10.0.0/24"
+    connector_cidr           = "10.10.8.0/28"
+    cloud_sql_tier           = "db-custom-1-3840"
+    db_name                  = "player_hospitality"
+    db_user                  = "app_user"
+    pubsub_message_retention = "604800s"
+    allowed_admin_principals = [
+      "user:d2121@d.com"
+    ]
+    cloud_run_player_api_cpu = "1"
+    cloud_run_player_api_mem = "512Mi"
+    cloud_run_processor_cpu  = "1"
+    cloud_run_processor_mem  = "512Mi"
+    cloud_run_billing_cpu    = "1"
+    cloud_run_billing_mem    = "512Mi"
+  }
+
+  # Add a new property by copying this block and changing only values.
+  property_atlantic_city = {
+    property_id              = "atlantic-city"
+    project_id               = "casino-ai-platform"
+    region                   = "us-central1"
+    vpc_cidr                 = "10.20.0.0/24"
+    connector_cidr           = "10.20.8.0/28"
+    cloud_sql_tier           = "db-custom-1-3840"
+    db_name                  = "player_hospitality"
+    db_user                  = "app_user"
+    pubsub_message_retention = "604800s"
+    allowed_admin_principals = [
+      "user:d2121@d.com"
+    ]
+    cloud_run_player_api_cpu = "1"
+    cloud_run_player_api_mem = "512Mi"
+    cloud_run_processor_cpu  = "1"
+    cloud_run_processor_mem  = "512Mi"
+    cloud_run_billing_cpu    = "1"
+    cloud_run_billing_mem    = "512Mi"
+  }
+}
