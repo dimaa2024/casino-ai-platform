@@ -19,7 +19,7 @@ properties = {
     db_user                  = "app_user"
     pubsub_message_retention = "604800s"
     allowed_admin_principals = [
-      "user:d2121@d.com"
+      "user:dmitri.aldowski@gmail.com"
     ]
     cloud_run_player_api_cpu = "1"
     cloud_run_player_api_mem = "512Mi"
@@ -41,7 +41,7 @@ properties = {
     db_user                  = "app_user"
     pubsub_message_retention = "604800s"
     allowed_admin_principals = [
-      "user:d2121@d.com"
+      "user:dmitri.aldowski@gmail.com"
     ]
     cloud_run_player_api_cpu = "1"
     cloud_run_player_api_mem = "512Mi"

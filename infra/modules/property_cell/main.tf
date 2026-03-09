@@ -71,11 +71,6 @@ resource "google_compute_subnetwork" "cell" {
   region                   = var.property.region
   network                  = google_compute_network.cell.id
   private_ip_google_access = true
-
-  secondary_ip_range {
-    range_name    = "${local.name_prefix}-services"
-    ip_cidr_range = cidrsubnet(var.property.vpc_cidr, 2, 1)
-  }
 }
 
 resource "google_compute_firewall" "allow_internal" {
