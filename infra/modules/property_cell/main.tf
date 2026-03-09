@@ -1,5 +1,10 @@
 locals {
   name_prefix = replace(var.property.property_id, "_", "-")
+  key_ring_name = (
+    try(var.property.kms_key_ring_name, null) != null && trimspace(var.property.kms_key_ring_name) != ""
+    ? var.property.kms_key_ring_name
+    : "${local.name_prefix}-kr"
+  )
 
   labels = merge(var.organization_context.labels, {
     property = var.property.property_id
@@ -49,10 +54,30 @@ resource "google_project_service" "required" {
   disable_on_destroy = false
 }
 
-data "google_project" "cell" {
-  project_id = var.property.project_id
+resource "google_project_service_identity" "cloudsql" {
+  provider = google-beta
+  project  = var.property.project_id
+  service  = "sqladmin.googleapis.com"
 
   depends_on = [google_project_service.required]
+}
+
+resource "google_project_service_identity" "pubsub" {
+  provider = google-beta
+  project  = var.property.project_id
+  service  = "pubsub.googleapis.com"
+
+  depends_on = [google_project_service.required]
+}
+
+resource "time_sleep" "wait_for_cloudsql_service_agent" {
+  depends_on      = [google_project_service_identity.cloudsql]
+  create_duration = "45s"
+}
+
+resource "time_sleep" "wait_for_pubsub_service_agent" {
+  depends_on      = [google_project_service_identity.pubsub]
+  create_duration = "20s"
 }
 
 resource "google_compute_network" "cell" {
@@ -120,7 +145,7 @@ resource "google_vpc_access_connector" "serverless" {
 
 resource "google_kms_key_ring" "cell" {
   project  = var.property.project_id
-  name     = "${local.name_prefix}-kr"
+  name     = local.key_ring_name
   location = var.property.region
 }
 
@@ -137,13 +162,17 @@ resource "google_kms_crypto_key" "cell" {
 resource "google_kms_crypto_key_iam_member" "cloudsql_key_user" {
   crypto_key_id = google_kms_crypto_key.cell.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  member        = "serviceAccount:service-${data.google_project.cell.number}@gcp-sa-cloud-sql.iam.gserviceaccount.com"
+  member        = "serviceAccount:${google_project_service_identity.cloudsql.email}"
+
+  depends_on = [time_sleep.wait_for_cloudsql_service_agent]
 }
 
 resource "google_kms_crypto_key_iam_member" "pubsub_key_user" {
   crypto_key_id = google_kms_crypto_key.cell.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  member        = "serviceAccount:service-${data.google_project.cell.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+  member        = "serviceAccount:${google_project_service_identity.pubsub.email}"
+
+  depends_on = [time_sleep.wait_for_pubsub_service_agent]
 }
 
 resource "google_service_account" "player_api" {

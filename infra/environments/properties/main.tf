@@ -3,6 +3,11 @@ provider "google" {
   region  = var.organization_context.default_region
 }
 
+provider "google-beta" {
+  project = var.organization_context.bootstrap_project
+  region  = var.organization_context.default_region
+}
+
 module "property_cell" {
   for_each = var.properties
 

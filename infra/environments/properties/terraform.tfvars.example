@@ -34,6 +34,7 @@ properties = {
     property_id              = "atlantic-city"
     project_id               = "casino-ai-platform"
     region                   = "us-central1"
+    kms_key_ring_name        = "atlantic-city-kr-v2"
     vpc_cidr                 = "10.20.0.0/24"
     connector_cidr           = "10.20.8.0/28"
     cloud_sql_tier           = "db-custom-1-3840"

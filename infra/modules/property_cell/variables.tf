@@ -11,6 +11,7 @@ variable "property" {
     property_id              = string
     project_id               = string
     region                   = string
+    kms_key_ring_name        = optional(string)
     vpc_cidr                 = string
     connector_cidr           = string
     cloud_sql_tier           = string
